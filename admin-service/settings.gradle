@@ -1,0 +1,9 @@
+rootProject.name = 'admin-service'
+include 'constants'
+include 'controller'
+include 'dto'
+include 'exception'
+include 'model'
+include 'repository'
+include 'service'
+
