@@ -1,0 +1,16 @@
+###### Server Path #######
+server:
+  servlet:
+    context-path: /user-service
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: carparkingsystem
+      auto-index-creation: true
+
+###### Jwt SecretKey #######
+#jwt:
+#  secret: book-store
