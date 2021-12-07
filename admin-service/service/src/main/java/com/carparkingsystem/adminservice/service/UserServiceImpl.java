@@ -6,14 +6,13 @@ import com.carparkingsystem.adminservice.dto.UserLoginDTO;
 import com.carparkingsystem.adminservice.exception.UserException;
 import com.carparkingsystem.adminservice.model.User;
 import com.carparkingsystem.adminservice.repository.UserRepository;
+import com.carparkingsystem.adminservice.utils.MailUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
+import javax.mail.MessagingException;
 import java.util.Optional;
 
 @Service
@@ -32,27 +31,19 @@ public class UserServiceImpl implements IUserService{
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-//    @Autowired
-//    private JavaMailSender javaMailSender;
 
-//    @Value("${mail.url}")
-//    private String mailURL;
+    @Autowired
+    private MailUtil mailUtil;
 
     @Override
-    public UserDTO addPerson(UserDTO userDTO)  {
+    public UserDTO addPerson(UserDTO userDTO) throws MessagingException {
         Optional<User> personDetails = userRepository.findByEmail(userDTO.getEmail());
         if (personDetails.isPresent()) {
             throw new UserException(ExceptionType.USER_ALREADY_EXIST.getMessage());
         }
         User userData = saveUserData(userDTO);
         UserDTO response = modelMapper.map(userData, UserDTO.class);
-//        MimeMessage message = javaMailSender.createMimeMessage();
-//        MimeMessageHelper helper = new MimeMessageHelper(message);
-//        helper.setTo(email);
-//        helper.setSubject(subject);
-//        helper.setText("Please click here : "
-//                + "<a href=" + mailURL + url + generatedToken + ">" +displayMessage +"</a>", true);
-//        javaMailSender.send(message);
+        mailUtil.sendEmail(response);
         return response;
     }
 
@@ -65,7 +56,13 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public UserLoginDTO login(UserLoginDTO userDTO) {
-        return null;
+    public UserLoginDTO login(UserLoginDTO userLoginDTO) {
+        User userByUserName = userRepository.findByusername(userLoginDTO.getUsername()).orElseThrow(
+                () -> new UserException(ExceptionType.UNAUTHORISED_USER.getMessage()));
+        boolean password = bCryptPasswordEncoder.matches(userLoginDTO.getPassword(), userByUserName.getPassword());
+        if (!password) {
+            throw new UserException(ExceptionType.PASSWORD_INCORRECT.getMessage());
+        }
+        return userLoginDTO;
     }
 }
