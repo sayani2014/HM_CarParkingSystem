@@ -11,6 +11,25 @@ spring:
       database: carparkingsystem
       auto-index-creation: true
 
+  ####### Email Properties ######
+  mail:
+    host: smtp-mail.outlook.com
+    port: 587
+    username: ${username}
+    password: ${password}
+    properties:
+      mail:
+        protocol: TLSv1.2
+        tls: true
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp-mail.outlook.com
+
+
 ###### Jwt SecretKey #######
 #jwt:
 #  secret: book-store
+

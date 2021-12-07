@@ -1,0 +1,9 @@
+rootProject.name = 'car-parking'
+include 'controller'
+include 'service'
+include 'model'
+include 'dto'
+include 'repository'
+include 'constant'
+include 'exception'
+

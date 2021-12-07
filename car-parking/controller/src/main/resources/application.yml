@@ -1,0 +1,12 @@
+server:
+  servlet:
+    context-path: /parking-service
+  port: 8081
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: carparkingsystem
+      auto-index-creation: true
+
