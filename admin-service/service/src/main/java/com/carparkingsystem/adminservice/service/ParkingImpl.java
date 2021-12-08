@@ -2,9 +2,7 @@ package com.carparkingsystem.adminservice.service;
 
 import com.carparkingsystem.adminservice.dto.ParkingDTO;
 import com.carparkingsystem.adminservice.dto.ResponseDTO;
-import com.carparkingsystem.adminservice.model.Parking;
-import com.carparkingsystem.adminservice.repository.ParkingRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -14,13 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import java.util.Arrays;
 
 @Service
 public class ParkingImpl implements IParking{
-
-    @Autowired
-    private ParkingRepository parkingRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -28,31 +23,48 @@ public class ParkingImpl implements IParking{
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private ObjectMapper mapper;
-
     @Override
     public ParkingDTO addParking(ParkingDTO parkingDTO) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        ParkingDTO parkingDTO1 = mapper.convertValue(parkingDTO, ParkingDTO.class);
+        JSONObject parkingJsonObject = new JSONObject();
+        parkingJsonObject.put("spacename", parkingDTO.getSpacename());
+        parkingJsonObject.put("capacity", parkingDTO.getCapacity());
+        parkingJsonObject.put("description", parkingDTO.getDescription());
+        parkingJsonObject.put("parkingSlot", parkingDTO.getParkingSlot());
 
-        HttpEntity<String> entity = new HttpEntity<>(parkingDTO1.toString(), headers);
-
+        HttpEntity<String> entity = new HttpEntity<>(parkingJsonObject.toString(), headers);
         restTemplate.exchange("http://localhost:8081/parking-service/addParkingDetails",
-                HttpMethod.POST, entity, ResponseDTO.class).getBody();
+                                                            HttpMethod.POST, entity, ResponseDTO.class).getBody();
 
         return parkingDTO;
     }
 
     @Override
-    public List<ParkingDTO> getAllParking() {
-        return null;
+    public ResponseDTO getAllParking() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<ResponseDTO> entity = new HttpEntity<>(headers);
+
+        ResponseDTO response =
+                restTemplate.exchange(
+                        "http://localhost:8081/parking-service/getAllParkingDetails", HttpMethod.GET, entity,
+                        ResponseDTO.class).getBody();
+
+        return response;
     }
 
     @Override
-    public ParkingDTO getParking(String spacename) {
-        return null;
+    public ResponseDTO getParking(String spacename) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<ResponseDTO> entity = new HttpEntity<>(headers);
+
+        ResponseDTO response =
+                restTemplate.exchange(
+                        "http://localhost:8081/parking-service/getParkingDetail?spacename=" +spacename, HttpMethod.GET, entity,
+                        ResponseDTO.class).getBody();
+        return response;
     }
 }

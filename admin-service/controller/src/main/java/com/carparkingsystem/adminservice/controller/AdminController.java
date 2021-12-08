@@ -6,15 +6,13 @@ import com.carparkingsystem.adminservice.dto.ResponseDTO;
 import com.carparkingsystem.adminservice.dto.UserDTO;
 import com.carparkingsystem.adminservice.dto.UserLoginDTO;
 import com.carparkingsystem.adminservice.service.IParking;
-import com.carparkingsystem.adminservice.service.IUserService;
+import com.carparkingsystem.adminservice.service.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 //import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -22,10 +20,10 @@ import javax.validation.Valid;
 //@EnableAuthorizationServer
 //@EnableResourceServer
 @RestController
-public class UserController {
+public class AdminController {
 
     @Autowired
-    private IUserService userService;
+    private IAdminService userService;
 
     @Autowired
     private IParking parkingService;
@@ -46,5 +44,17 @@ public class UserController {
     public ResponseEntity<ResponseDTO> addParking (@RequestBody ParkingDTO parkingDTO) {
         return new ResponseEntity<>(new ResponseDTO(CommonMessage.REGISTRATION_SUCCESSFUL.getMessage(),
                                                 parkingService.addParking(parkingDTO)), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllParkingDetails")
+    public ResponseEntity<ResponseDTO> getAllParking () {
+        return new ResponseEntity<>(new ResponseDTO(CommonMessage.FETCHED_DETAILS_SUCCESSFULLY.getMessage(),
+                parkingService.getAllParking()), HttpStatus.OK);
+    }
+
+    @GetMapping("/getParkingDetail")
+    public ResponseEntity<ResponseDTO> getParking (@RequestParam(value = "spacename") String spacename) {
+        return new ResponseEntity<>(new ResponseDTO(CommonMessage.FETCHED_DETAILS_SUCCESSFULLY.getMessage(),
+                parkingService.getParking(spacename)), HttpStatus.OK);
     }
 }

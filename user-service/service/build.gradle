@@ -1,0 +1,19 @@
+repositories {
+    mavenCentral()
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    implementation project(':model')
+    implementation project(':repository')
+    implementation project(':exception')
+    implementation project(':constant')
+    implementation project(':dto')
+}

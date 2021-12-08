@@ -1,11 +1,12 @@
 package com.carparkingsystem.adminservice.service;
 
 import com.carparkingsystem.adminservice.dto.ParkingDTO;
+import com.carparkingsystem.adminservice.dto.ResponseDTO;
 
 import java.util.List;
 
 public interface IParking {
     ParkingDTO addParking(ParkingDTO parkingDTO);
-    List<ParkingDTO> getAllParking();
-    ParkingDTO getParking(String spacename);
+    ResponseDTO getAllParking();
+    ResponseDTO getParking(String spacename);
 }

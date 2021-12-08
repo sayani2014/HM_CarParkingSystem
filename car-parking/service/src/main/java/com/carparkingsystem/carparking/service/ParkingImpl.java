@@ -52,7 +52,6 @@ public class ParkingImpl implements IParking{
     public List<Integer> checkParkingLot(String spacename) {
         List<Integer> slot = new ArrayList<>();
         Parking userByUserName = checkSpace(spacename);
-        System.out.println(userByUserName.getParkingSlot().size());
         for(int i=0; i < userByUserName.getParkingSlot().size(); i++) {
             System.out.println(userByUserName.getParkingSlot().get(i).isFree());
             if(userByUserName.getParkingSlot().get(i).isFree() == true) {
