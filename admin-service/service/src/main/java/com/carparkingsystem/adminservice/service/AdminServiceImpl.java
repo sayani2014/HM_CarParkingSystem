@@ -16,7 +16,7 @@ import javax.mail.MessagingException;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements IUserService{
+public class AdminServiceImpl implements IAdminService {
 
     private static final String HOSTING_SEQ_KEY = "hosting";
 

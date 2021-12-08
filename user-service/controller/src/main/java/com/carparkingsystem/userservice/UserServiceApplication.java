@@ -1,11 +1,11 @@
-package com.carparkingsystem.adminservice;
+package com.carparkingsystem.userservice;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
@@ -14,16 +14,6 @@ public class UserServiceApplication {
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
-	}
-
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	public SimpleMailMessage preConfiguredMessage() {
-		return new SimpleMailMessage();
 	}
 
 	@Bean

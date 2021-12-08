@@ -1,7 +1,7 @@
 ###### Server Path #######
 server:
   servlet:
-    context-path: /user-service
+    context-path: /admin-service
 
 spring:
   data:

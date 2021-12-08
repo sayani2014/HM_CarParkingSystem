@@ -5,7 +5,7 @@ import com.carparkingsystem.adminservice.dto.UserLoginDTO;
 
 import javax.mail.MessagingException;
 
-public interface IUserService {
+public interface IAdminService {
     UserDTO addPerson(UserDTO userDTO) throws MessagingException;
     UserLoginDTO login(UserLoginDTO userDTO);
 }
