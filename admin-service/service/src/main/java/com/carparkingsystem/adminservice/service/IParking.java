@@ -9,4 +9,5 @@ public interface IParking {
     ParkingDTO addParking(ParkingDTO parkingDTO);
     ResponseDTO getAllParking();
     ResponseDTO getParking(String spacename);
+    ResponseDTO updateParkingDetails(String spacename, ParkingDTO parkingDTO);
 }

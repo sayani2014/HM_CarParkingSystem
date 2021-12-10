@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ParkingRepository extends MongoRepository<Parking, String> {
     Optional<Parking> findBySpacename(String spacename);
+    void deleteBySpacename(String spacename);
 }

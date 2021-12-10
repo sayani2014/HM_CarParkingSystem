@@ -67,4 +67,22 @@ public class ParkingImpl implements IParking{
                         ResponseDTO.class).getBody();
         return response;
     }
+
+    @Override
+    public ResponseDTO updateParkingDetails(String spacename, ParkingDTO parkingDTO) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        JSONObject parkingJsonObject = new JSONObject();
+        parkingJsonObject.put("spacename", parkingDTO.getSpacename());
+        parkingJsonObject.put("capacity", parkingDTO.getCapacity());
+        parkingJsonObject.put("description", parkingDTO.getDescription());
+        parkingJsonObject.put("parkingSlot", parkingDTO.getParkingSlot());
+
+        HttpEntity<String> entity = new HttpEntity<>(parkingJsonObject.toString(), headers);
+        ResponseDTO response =
+                restTemplate.exchange("http://localhost:8081/parking-service/updateParkingDetails?spacename="
+                                +spacename, HttpMethod.PUT, entity, ResponseDTO.class).getBody();
+        return response;
+    }
 }

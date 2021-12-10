@@ -7,6 +7,7 @@ import com.carparkingsystem.carparking.exception.ParkingException;
 import com.carparkingsystem.carparking.model.Parking;
 import com.carparkingsystem.carparking.repository.ParkingRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,32 @@ public class ParkingImpl implements IParking{
             throw new ParkingException(ExceptionType.UNAVAILABLE_SLOT.getMessage());
         }
         return slot;
+    }
+
+    @Override
+    public ParkingDTO updateParkingSlot(String spacename, int slotNo) {
+        Parking parking = checkSpace(spacename);
+        for(int i=0; i<parking.getParkingSlot().size(); i++){
+            if(parking.getParkingSlot().get(i).getSlotNo() == slotNo) {
+                parking.getParkingSlot().get(i).setFree(true);
+                break;
+            }
+        }
+        parkingRepository.deleteBySpacename(spacename);
+        Parking response = parkingRepository.save(parking);
+        ParkingDTO parkingDTO = modelMapper.map(response, ParkingDTO.class);
+        return parkingDTO;
+    }
+
+    @Override
+    public ParkingDTO updateParkingDetails(String spacename, ParkingDTO parkingDTO) {
+        System.out.println(parkingDTO);
+        checkSpace(spacename);
+        parkingRepository.deleteBySpacename(spacename);
+        Parking request = modelMapper.map(parkingDTO, Parking.class);
+        parkingRepository.save(request);
+        ParkingDTO response = modelMapper.map(request, ParkingDTO.class);
+        return response;
     }
 
     private Parking checkSpace(String spacename) {

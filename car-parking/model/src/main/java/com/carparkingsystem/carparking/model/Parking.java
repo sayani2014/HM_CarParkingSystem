@@ -9,7 +9,6 @@ import java.util.List;
 @Document(collection="parking")
 @Data
 public class Parking {
-
     @Indexed(unique = true)
     private String spacename;
     private long capacity;

@@ -57,4 +57,11 @@ public class AdminController {
         return new ResponseEntity<>(new ResponseDTO(CommonMessage.FETCHED_DETAILS_SUCCESSFULLY.getMessage(),
                 parkingService.getParking(spacename)), HttpStatus.OK);
     }
+
+    @PutMapping("/updateParkingDetails")
+    public ResponseEntity<ResponseDTO> updateParkingDetails(@RequestParam(value = "spacename") String spacename,
+                                                            @RequestBody ParkingDTO parkingDTO) {
+        return new ResponseEntity<>(new ResponseDTO(CommonMessage.UPDATED_PARKING_DETAILS_SUCCESSFULLY.getMessage(),
+                parkingService.updateParkingDetails(spacename, parkingDTO)), HttpStatus.OK);
+    }
 }

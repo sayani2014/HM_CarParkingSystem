@@ -1,11 +1,14 @@
 package com.carparkingsystem.userservice.service;
 
+import com.carparkingsystem.userservice.constant.CommonMessage;
 import com.carparkingsystem.userservice.constant.ExceptionType;
 import com.carparkingsystem.userservice.dto.ParkingDetailsDTO;
 import com.carparkingsystem.userservice.dto.ResponseDTO;
+import com.carparkingsystem.userservice.dto.UserLoginDTO;
 import com.carparkingsystem.userservice.exception.UserException;
 import com.carparkingsystem.userservice.model.ParkingDetails;
 import com.carparkingsystem.userservice.repository.UserRepository;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -44,6 +47,7 @@ public class UserServiceImpl implements IUserService {
     public ParkingDetailsDTO bookParking(ParkingDetailsDTO parkingDetailsDTO) {
         parkingDetailsDTO.setId(sequence.getNextSequenceId(HOSTING_SEQ_KEY));
         parkingDetailsDTO.setEntrydatetime(LocalDateTime.now());
+
         boolean checkStatus = checkExistingRecord(parkingDetailsDTO.getEntrydatetime());
 
         if(checkStatus == false) {
@@ -55,10 +59,11 @@ public class UserServiceImpl implements IUserService {
                     emptySpots.add(s.trim());
 
             ParkingDetails parkingDetails = saveUserData(parkingDetailsDTO, emptySpots);
+            updateParkingSlot(parkingDetails.getSpacename(), parkingDetails.getSlotNo());
             ParkingDetailsDTO finalResponse = modelMapper.map(parkingDetails, ParkingDetailsDTO.class);
             return finalResponse;
         }
-        return parkingDetailsDTO;
+        return null;
     }
 
     @Override
@@ -69,11 +74,41 @@ public class UserServiceImpl implements IUserService {
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public String exitParking(long id) {
+        Optional<ParkingDetails> byId = userRepository.findById(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<ResponseDTO> entity = new HttpEntity<>(headers);
+
+        restTemplate.exchange("http://localhost:8081/parking-service/updateParkingSlot?spacename="
+                        +byId.get().getSpacename() +"&slotNo="+byId.get().getSlotNo(), HttpMethod.PUT, entity,
+                ResponseDTO.class).getBody();
+
+        return CommonMessage.PARKING_EXITED.getMessage();
+    }
+
+    @Override
+    public ResponseDTO login(UserLoginDTO userLoginDTO) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        JSONObject parkingJsonObject = new JSONObject();
+        parkingJsonObject.put("username", userLoginDTO.getUsername());
+        parkingJsonObject.put("password", userLoginDTO.getPassword());
+
+        HttpEntity<String> entity = new HttpEntity<>(parkingJsonObject.toString(), headers);
+        ResponseDTO responseDTO = restTemplate.exchange("http://localhost:8080/admin-service/login",
+                HttpMethod.POST, entity, ResponseDTO.class).getBody();
+
+        return responseDTO;
+    }
+
     private boolean checkExistingRecord(LocalDateTime entrydatetime) {
         boolean flag = false;
         List<ParkingDetails> byEntrydatetime = userRepository.findByEntrydatetime(entrydatetime);
         for(int i=0; i<byEntrydatetime.size(); i++) {
-            if(byEntrydatetime.get(i).getExitdatetime() == null) {
+            if(byEntrydatetime.get(i).getExitdatetime().isAfter(LocalDateTime.now())) {
                 flag = true;
                 throw new UserException(ExceptionType.PARKING_EXIST.getMessage());
             }
@@ -105,5 +140,16 @@ public class UserServiceImpl implements IUserService {
             }
         }
         return null;
+    }
+
+    private void updateParkingSlot(String spacename, String slotno) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<ResponseDTO> entity = new HttpEntity<>(headers);
+
+        restTemplate.exchange(
+                "http://localhost:8081/parking-service/updateParkingSlot?spacename="+spacename+
+                        "&slotNo="+slotno, HttpMethod.PUT, entity,
+                ResponseDTO.class).getBody();
     }
 }
