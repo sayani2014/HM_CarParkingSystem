@@ -59,7 +59,6 @@ public class AdminServiceImpl implements IAdminService {
     public UserLoginDTO login(UserLoginDTO userLoginDTO) {
         User userByUserName = userRepository.findByusername(userLoginDTO.getUsername()).orElseThrow(
                 () -> new UserException(ExceptionType.UNAUTHORISED_USER.getMessage()));
-        System.out.println(userByUserName.getPassword());
         boolean password = bCryptPasswordEncoder.matches(userLoginDTO.getPassword(), userByUserName.getPassword());
         if (!password) {
             throw new UserException(ExceptionType.PASSWORD_INCORRECT.getMessage());

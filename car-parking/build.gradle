@@ -25,14 +25,15 @@ subprojects {
 
 	dependencies {
 		implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-//		implementation 'org.springframework.boot:spring-boot-starter-security'
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		compileOnly 'org.projectlombok:lombok'
 		developmentOnly 'org.springframework.boot:spring-boot-devtools'
 		annotationProcessor 'org.projectlombok:lombok'
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//		testImplementation 'org.springframework.security:spring-security-test'
 		implementation group: 'org.modelmapper', name: 'modelmapper', version: '0.7.5'
+		testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+		testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.2'
+		testImplementation group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.4'
 	}
 
 	test {

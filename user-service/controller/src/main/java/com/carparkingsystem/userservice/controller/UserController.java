@@ -26,7 +26,7 @@ public class UserController {
 
     @GetMapping("/getParkingDetails")
     public ResponseEntity<ResponseDTO> getParkingDetails () {
-        return new ResponseEntity<>(new ResponseDTO(CommonMessage.BOOKING_SUCCESSFUL.getMessage(),
+        return new ResponseEntity<>(new ResponseDTO(CommonMessage.FETCHED_PARKING_DETAILS.getMessage(),
                 userService.getParkingDetails()), HttpStatus.OK);
     }
 

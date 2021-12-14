@@ -7,7 +7,6 @@ import com.carparkingsystem.carparking.exception.ParkingException;
 import com.carparkingsystem.carparking.model.Parking;
 import com.carparkingsystem.carparking.repository.ParkingRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +53,6 @@ public class ParkingImpl implements IParking{
         List<Integer> slot = new ArrayList<>();
         Parking userByUserName = checkSpace(spacename);
         for(int i=0; i < userByUserName.getParkingSlot().size(); i++) {
-            System.out.println(userByUserName.getParkingSlot().get(i).isFree());
             if(userByUserName.getParkingSlot().get(i).isFree() == true) {
                 slot.add(userByUserName.getParkingSlot().get(i).getSlotNo());
             }
