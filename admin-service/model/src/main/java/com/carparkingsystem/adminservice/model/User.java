@@ -34,7 +34,7 @@ public class User {
     private String city;
     private String state;
     private String country;
-    private long pin;
+    private String pin;
 
     private String role;
 

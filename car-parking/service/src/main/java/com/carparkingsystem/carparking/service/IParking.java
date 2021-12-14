@@ -1,7 +1,6 @@
 package com.carparkingsystem.carparking.service;
 
 import com.carparkingsystem.carparking.dto.ParkingDTO;
-import com.carparkingsystem.carparking.dto.ParkingSlotDTO;
 
 import java.util.List;
 

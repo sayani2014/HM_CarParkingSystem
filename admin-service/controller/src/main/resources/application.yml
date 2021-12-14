@@ -19,7 +19,7 @@ spring:
     password: ${password}
     properties:
       mail:
-        protocol: TLSv1.2
+        protocol: smtp
         tls: true
         smtp:
           auth: true
